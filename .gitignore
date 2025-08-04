@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+*.log
+
+# Jupyter Notebook (ไม่ต้องการให้ push ขึ้น)
+*.ipynb
+.ipynb_checkpoints/
+# VS Code settings
+.vscode/
+
+# ระบบ OS ทั่วไป
+.DS_Store  # macOS
+Thumbs.db  # Windows
+
+# ความปลอดภัย
+.env
+*.sqlite3
+
+# Streamlit Cache
+.streamlit/
+
+# Git
+.git/
