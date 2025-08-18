@@ -15,8 +15,19 @@ def melte_data(df):
     )
     # convert dtype
     df_melte["จำนวนผู้ป่วย"] = pd.to_numeric(df_melte["จำนวนผู้ป่วย"], errors = "coerce").astype("Int64")
-    #print(df_melte.info())
+    print(df_melte.info())
     return df_melte
+
+def describe_data(df):
+    total_case = df["จำนวนผู้ป่วย"].sum()
+
+    top_disease_group = df.groupby("ประเภทโรค")["จำนวนผู้ป่วย"].sum().sort_values(ascending = False)
+    top_disease_name = top_disease_group.index[0]
+    top_disease_sum = top_disease_group.iloc[0]
+
+    top_province = df.groupby("จังหวัด")["จำนวนผู้ป่วย"].sum().sort_values(ascending = False).index[0]
+
+    return total_case, top_disease_name, top_disease_sum, top_province
 
 def unique_disease(df):
     df["ประเภทโรค"].unique()
