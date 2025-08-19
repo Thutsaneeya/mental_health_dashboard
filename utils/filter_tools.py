@@ -13,32 +13,28 @@ def melte_data(df):
                         var_name = "ประเภทโรค",
                         value_name = "จำนวนผู้ป่วย"
     )
-    # convert dtype
+    # Convert dtype
     df_melte["จำนวนผู้ป่วย"] = pd.to_numeric(df_melte["จำนวนผู้ป่วย"], errors = "coerce").astype("Int64")
     print(df_melte.info())
     return df_melte
 
-def describe_data(df):
+def health_summary(df):
+    # Total number of patients
     total_case = df["จำนวนผู้ป่วย"].sum()
-
+    # number of patients by disease
     top_disease_group = df.groupby("ประเภทโรค")["จำนวนผู้ป่วย"].sum().sort_values(ascending = False)
-    print("top_disease_group: ", top_disease_group)
     # Get max
     top_disease_name = top_disease_group.index[0]
     top_disease_sum = top_disease_group.iloc[0]
     # Get min
-    rare_disease_name = top_disease_group.index[-1]
-    print("rare_disease_name: ", rare_disease_name)
-    rare_disease_count = top_disease_group.iloc[-1]
-    print("rare_disease_count: ", rare_disease_count)
+    #rare_disease_name = top_disease_group.index[-1]
+    #rare_disease_count = top_disease_group.iloc[-1]
 
+    # Get max of province
     top_province = df.groupby("จังหวัด")["จำนวนผู้ป่วย"].sum().sort_values(ascending = False).index[0]
 
-    return total_case, top_disease_name, top_disease_sum, rare_disease_name, rare_disease_count, top_province
+    return top_disease_group, total_case, top_disease_name, top_disease_sum, top_province
 
-def unique_disease(df):
-    df["ประเภทโรค"].unique()
-    return df
 
 # Summarize number of patients
 def summarize_by_disease(df):
@@ -47,7 +43,7 @@ def summarize_by_disease(df):
 # Filter by province
 def select_by_province(df, province):
    if province is None:
-        # none filters
+        # none filter
         return df 
    else:
         return df[df["จังหวัด"] == province] 
@@ -68,3 +64,6 @@ def top_province(df, disease):
     )
     return df_top5
 
+"""def unique_disease(df):
+    df["ประเภทโรค"].unique()
+    return df"""

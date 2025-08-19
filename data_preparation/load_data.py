@@ -5,6 +5,7 @@
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from configs.file_paths import filename 
 from utils.import_tools import load_csv_from_raw_data, pd
 
 # Load data function
@@ -51,3 +52,10 @@ def clean_data(df):
         print(f"เกิดข้อผิดพลาด: {e}")
 
     return df
+
+# Get DataFrame
+def get_data():
+    df_raw = read_raw_data(filename)
+    df_info = data_info(df_raw)
+    df_cleaned = clean_data(df_raw)
+    return df_cleaned

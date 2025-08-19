@@ -12,6 +12,7 @@ build/
 *.ipynb
 .ipynb_checkpoints/
 components/plot_section2_old.py
+loaders/
 
 # VS Code settings
 .vscode/
