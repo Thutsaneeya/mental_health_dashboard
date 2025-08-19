@@ -55,18 +55,28 @@ def select_by_province(df, province):
 
 # Filter by disease
 def select_by_disease(df, disease):
-    return df[df["ประเภทโรค"] == disease]
+    if disease is None:
+        return df
+    else:
+        return df[df["ประเภทโรค"] == disease]
 
 
-# Get top 5 province of highest patients by disease
-def top_province(df, disease):
-    df_top5 = (df[df["ประเภทโรค"] == disease]
+# Get top 5 province of highest and rare patients by disease
+def province_by_disease(df, disease):
+    df_top_province = (df[df["ประเภทโรค"] == disease]
             .groupby("จังหวัด")["จำนวนผู้ป่วย"]
             .sum()
             .reset_index()
             .sort_values("จำนวนผู้ป่วย", ascending = False).head(5)
     )
-    return df_top5
+    df_rare_province = (df[df["ประเภทโรค"] == disease]
+            .groupby("จังหวัด")["จำนวนผู้ป่วย"]
+            .sum()
+            .reset_index()
+            .sort_values("จำนวนผู้ป่วย", ascending = False).tail(5)
+    )
+    
+    return df_top_province, df_rare_province
 
 """def unique_disease(df):
     df["ประเภทโรค"].unique()

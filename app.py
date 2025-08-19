@@ -8,17 +8,29 @@ from data_preparation.load_data import get_data
 from utils.filter_tools import melte_data
 from components.dropdown import get_selections
 from components.kpi_cards import render_kpi_overview, render_kpi_by_province
-from utils.filter_tools import health_summary, select_by_province
+from utils.filter_tools import health_summary, select_by_province, select_by_disease
 from components.plot_section1 import plot_bar
 from components.plot_section2 import plot_scatter
+from components.plot_section3 import plot_section3
 
+# Section1
 def show_section1(df_melted, total_case, top_disease_name, top_disease_sum, top_province):
+    # Overview kpi cards
     render_kpi_overview(total_case, top_disease_name, top_disease_sum, top_province)
+    # Bar chart
     plot_bar(df_melted)
 
-def show_section2(df_filtered, sum_case, disease_name, disease_sum, rare_disease_name, rare_disease_count, province):
+# Section2
+def show_section2(df_by_province, sum_case, disease_name, disease_sum, rare_disease_name, rare_disease_count, province):
+    # Province kpi
     render_kpi_by_province(sum_case, disease_name, disease_sum, rare_disease_name, rare_disease_count, province)
-    plot_scatter(df_filtered, province)
+    # Scatter chart
+    plot_scatter(df_by_province, province)
+
+# Section3
+def show_section3(df_by_disease, disease):
+    # Facet bar chart
+    plot_section3(df_by_disease, disease)
 
 def run_dashboard():
     st.title("Mental Health Dashboard") 
@@ -31,11 +43,12 @@ def run_dashboard():
     province, disease = get_selections(df_melted)
 
      # ________________________ Filter __________________________________________
-    df_filtered = select_by_province(df_melted,province)
+    df_by_province = select_by_province(df_melted, province)
+    df_by_disease = select_by_disease(df_melted, disease)
 
     # __________________________ Describe Data __________________________________
     total_case, top_disease_name, top_disease_sum, top_province = health_summary(df_melted, False)
-    sum_case, disease_name, disease_sum, rare_disease_name, rare_disease_count = health_summary(df_filtered, True)
+    sum_case, disease_name, disease_sum, rare_disease_name, rare_disease_count = health_summary(df_by_province, True)
 
     # __________________________ Visualize _______________________________________
     # Layout    
@@ -43,7 +56,9 @@ def run_dashboard():
     with tab1:
         show_section1(df_melted, total_case, top_disease_name, top_disease_sum, top_province)
     with tab2:
-        show_section2(df_filtered, sum_case, disease_name, disease_sum, rare_disease_name, rare_disease_count, province)
+        show_section2(df_by_province, sum_case, disease_name, disease_sum, rare_disease_name, rare_disease_count, province)
+    with tab3:
+        show_section3(df_by_disease, disease)
     #show_sections(df_filtered, province)
 
 run_dashboard()

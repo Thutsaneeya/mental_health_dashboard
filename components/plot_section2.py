@@ -32,4 +32,4 @@ def plot_scatter(df, province):
 
         )
     scatter_fig.update_layout(title = f"การกระจายตัวของผู้ป่วยแต่ละโรคในจังหวัด{province}")
-    st.plotly_chart(scatter_fig, use_container_width = True, key = "scatter_section1")
+    st.plotly_chart(scatter_fig, use_container_width = True, key = "scatter_section2")
