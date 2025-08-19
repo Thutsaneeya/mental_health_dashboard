@@ -37,6 +37,9 @@ def clean_data(df):
         # Replace and filtered ["จังหวัด"]
         df["จังหวัด"] = df["จังหวัด"].replace("ไม่ทราบ", "ไม่ระบุจังหวัด")
         df = df[df["จังหวัด"] != "รวม"]
+
+        # Copy DataFrame before drop column
+        df_copy = df.copy()
         
         # Drop column ["รวม"]
         df = df.drop(columns = ["รวม"])
@@ -51,11 +54,11 @@ def clean_data(df):
     except Exception as e:
         print(f"เกิดข้อผิดพลาด: {e}")
 
-    return df
+    return df, df_copy
 
 # Get DataFrame
 def get_data():
     df_raw = read_raw_data(filename)
     df_info = data_info(df_raw)
-    df_cleaned = clean_data(df_raw)
-    return df_cleaned
+    df_cleaned, df_copy = clean_data(df_raw)
+    return df_cleaned, df_copy
