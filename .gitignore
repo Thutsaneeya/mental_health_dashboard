@@ -12,7 +12,10 @@ build/
 *.ipynb
 .ipynb_checkpoints/
 components/plot_section2_old.py
+components/choropleth.py
 loaders/
+streamlit_app.py
+data/
 
 # VS Code settings
 .vscode/

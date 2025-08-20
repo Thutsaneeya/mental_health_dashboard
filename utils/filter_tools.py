@@ -44,6 +44,14 @@ def health_summary(df, filtered):
 def summarize_by_disease(df):
     return df.groupby("ประเภทโรค")["จำนวนผู้ป่วย"].sum().reset_index()
 
+# Filter by year
+def select_by_year(df, year):
+   if year is None:
+        # none filter
+        return df 
+   else:
+        return df[df["ปี"] == year]
+   
 # Filter by province
 def select_by_province(df, province):
    if province is None:
