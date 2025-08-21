@@ -1,41 +1,25 @@
 # kpi_cards.py
+# Create metric 
 
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from utils.import_tools import st, px
+from utils.import_tools import st
 
-# Section1
-def render_kpi_overview(total_case, top_disease_name, top_disease_sum, top_province):
-    # Create columns
-    row1_col1, row1_col2, = st.columns(2)
-    row2_col1, row2_col2, = st.columns(2)
+# KPI card for total number of patients
+def overview_total_patients(df, year):
+    return st.metric(label = f"{year}", value = f"{df["จำนวนผู้ป่วย"].sum():,} ราย")
 
-    # Create KPI cards
-    with row1_col1:
-        st.metric(label = "จำนวนผู้ป่วยทั้งหมด", value = f"{total_case:,} ราย")
+# KPI card for missing province
+def overview_missing_province(df):
+    return st.metric(label = "ไม่ระบุจังหวัด", value = f"{df["จำนวนผู้ป่วย"].sum():,} ราย")
 
-    with row1_col2:
-        st.metric(label = "จังหวัดที่มีผู้ป่วยมากที่สุด", value = top_province)
+# KPI for top province by number of patients
+def overview_top_patients(df):
+    #  delta_color = "inverse"
+    return st.metric(label = " ", value = df["จังหวัด"], delta = f"{df["จำนวนผู้ป่วย"]:,} ราย")
 
-    with row2_col1:
-        st.metric(label = "โรคที่พบมากที่สุด", value = top_disease_name, delta = f"{top_disease_sum:,} ราย")
+# KPI for rare province by number of patients
+def overview_min_patients(df):
+    return st.metric(label = " ", value = df["จังหวัด"], delta = f"{df["จำนวนผู้ป่วย"]:,} ราย")
 
-    with row2_col2:
-        st.empty()
-        #st.metric(label = "โรคที่พบน้อยที่สุด", value = rare_disease_name, delta = f"{rare_disease_count:,} ราย")
-
-# Section2
-def render_kpi_by_province(total_case, top_disease_name, top_disease_sum, rare_disease_name, rare_disease_count, province):
-
-    row1_col1, row1_col2, = st.columns(2)
-    row2_col1, row2_col2, = st.columns(2)
-
-    with row1_col1:
-        st.metric(label = f"จำนวนผู้ป่วยทั้งหมดในจังหวัด{province}", value = f"{total_case:,} ราย")
-    with row1_col2:
-        st.metric(label = "โรคที่พบมากที่สุด", value = top_disease_name, delta = f"{top_disease_sum:,} ราย")
-    #with row2_col1:
-    st.metric(label = "โรคที่พบน้อยที่สุด", value = rare_disease_name, delta = f"{rare_disease_count:,} ราย")
-    #with row2_col2:
-        #st.empty()
