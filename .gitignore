@@ -15,7 +15,7 @@ components/plot_section2_old.py
 components/choropleth.py
 loaders/
 streamlit_app.py
-data/
+data/sample.csv
 utils/filter_tools_old.py
 
 # VS Code settings
