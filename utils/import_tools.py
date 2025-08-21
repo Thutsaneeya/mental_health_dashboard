@@ -12,13 +12,9 @@ import os
 def get_project_root():
     return os.path.dirname(os.path.abspath(__file__))
 
-# Get Files Path of Data/clean_report.csv
+# Get Files Path of Data/*.csv
 def get_data_path(filename):
     return os.path.join(get_project_root(), '..', 'data', filename)
-
-#  Get Files Path of Data/raw_data/
-#def get_raw_data_path(filename):
- #   return os.path.join(get_project_root(), '..', 'data', 'raw_data', filename)
 
 # Load .csv for raw_data
 def load_csv_from_raw_data(filename):

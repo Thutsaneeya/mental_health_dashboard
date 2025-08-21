@@ -12,7 +12,9 @@ build/
 *.ipynb
 .ipynb_checkpoints/
 components/plot_section2_old.py
+components/kpi_cards_old.py
 components/choropleth.py
+components/data_table.py
 loaders/
 streamlit_app.py
 data/sample.csv
