@@ -1,12 +1,11 @@
 # load_data.py
 # Data Preparation
-# 1. Read raw data, 2. Data information, 3. Cleaning data
+# 1. Read raw data, 2. Data information
 
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from configs.file_paths import filename 
-from utils.import_tools import load_csv_from_raw_data, pd
+from utils.import_tools import load_csv_from_raw_data, requests, json, st
 
 # Load data function
 def read_raw_data(filename):
@@ -27,8 +26,18 @@ def data_info(df):
     except Exception as e:
         print(f"เกิดข้อผิดพลาด: {e}")
 
+# Get geojson
+def load_geojson(url):
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        return json.loads(response.content.decode("utf-8-sig"))
+    except Exception as e:
+        st.error(f"โหลด GeoJSON ไม่สำเร็จ: {e}")
+        return None
+    
 # Clean data
-def clean_data(df):
+"""def clean_data(df):
     try:
         # Delete comma 
         for col in df.columns[1:]:
@@ -54,11 +63,4 @@ def clean_data(df):
     except Exception as e:
         print(f"เกิดข้อผิดพลาด: {e}")
 
-    return df, df_copy
-
-# Get DataFrame
-def get_data():
-    df_raw = read_raw_data(filename)
-    df_info = data_info(df_raw)
-    df_cleaned, df_copy = clean_data(df_raw)
-    return df_cleaned, df_copy
+    return df, df_copy"""
