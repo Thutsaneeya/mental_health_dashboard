@@ -1,6 +1,10 @@
 # file_paths.py
 
-filename = "report_2566.csv"
+# geojson url
+url = "https://raw.githubusercontent.com/chingchai/OpenGISData-Thailand/7f4c885f9c90599550a51c4d8c4fd7f259eab18b/provinces.geojson"
+
+# File path
+filename = "report_2563-2566.csv"
 """
 file_info = [
     {"filename": "report_2563.csv", "year": "2563"},
