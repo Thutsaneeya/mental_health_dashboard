@@ -16,6 +16,7 @@ components/choropleth.py
 loaders/
 streamlit_app.py
 data/
+utils/filter_tools_old.py
 
 # VS Code settings
 .vscode/
