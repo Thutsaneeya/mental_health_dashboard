@@ -6,7 +6,7 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from utils.import_tools import pd
 
-# Filter dataFrame by year
+# Filter DataFrame by year
 def select_by_year(df, year):
      try:
           if year is None:
@@ -14,61 +14,75 @@ def select_by_year(df, year):
                return df 
           else:
                # Filter by year
+               
                return df[df["ปี"] == year]
           
      except Exception as e:
         print(f"เกิดข้อผิดพลาด: {e}")
+        return df
+        
+# Filter province 
+def filter_province(df):
+     try:
+          # Remove rows "ไม่ระบุจังหวัด" and "รวม" for chroropleth
+          df_main = df[~df["จังหวัด"].isin(["รวม", "ไม่ระบุจังหวัด"])]
+
+          # "รวม" row for total_patients
+          df_total_row = df[df["จังหวัด"] == "รวม"]  
+
+          # Missing province for KPI cards
+          df_m_province = df[df["จังหวัด"] == "ไม่ระบุจังหวัด"][["จังหวัด", "รวม"]]
+          
+          # Filter for data table
+          df_patients = df[df["จังหวัด"] != "รวม"][["จังหวัด", "รวม"]]
+
+          # Get maximum and minimum rows of patients for KPI cards
+          df_top_p = df_patients.loc[df_patients["รวม"].idxmax()]
+          df_min_p = df_patients.loc[df_patients["รวม"].idxmin()]
+
+          return df_main, df_total_row, df_m_province, df_patients, df_top_p, df_min_p
+
+     except Exception as e:
+        print(f"เกิดข้อผิดพลาด: {e}")
+
+
+
+# Reshape DataFrame
+def reshape_disease_summary(df):
+     print("Reshape!...")
+     df = df[df["จังหวัด"] == "รวม"]
+     df_drop = df.drop(columns = ["จังหวัด", "รวม", "pro_code"])
+     
+     return df_drop.melt(id_vars = "ปี", var_name = "โรค", value_name = "จำนวนผู้ป่วย")
+
 
 # Sort DataFrame
 def sorted_data(df):
+     print("Sorted!......")
      # Sort value
-     df = df[["จังหวัด", "จำนวนผู้ป่วย"]]
+     df = df[["จังหวัด", "รวม"]]
      #df_sort = (df.groupby("จังหวัด", as_index = False)["จำนวนผู้ป่วย"].sort_values(by = "จำนวนผู้ป่วย", ascending = False)).reset_index()
-     df_sorted = df.sort_values(by = "จำนวนผู้ป่วย", ascending = False)
+     df_sorted = df.sort_values(by = "รวม", ascending = False)
      return df_sorted
 
 # Format for KPI cards
-def format_metric(n, unit = "ราย", lang = "th"):
-    if lang == "th":
-        if n >= 1_000_000:
-            return f"{n / 1_000_000:.1f} ล้าน{unit}"
-        elif n >= 1_000:
-            return f"{n / 1_000:.1f} พัน{unit}"
-        else:
-            return f"{n:,} {unit}"
-    else:
-        if n >= 1_000_000:
-            return f"{n / 1_000_000:.1f}M {unit}"
-        elif n >= 1_000:
-            return f"{n / 1_000:.1f}K {unit}"
-        else:
-            return f"{n:,} {unit}"
-        
-# Filter province with out "ไม่ระบุจังหวัด"
-def filter_province(df):
-     try:
-          return df[df["จังหวัด"] != "ไม่ระบุจังหวัด"]
-
-     except Exception as e:
-        print(f"เกิดข้อผิดพลาด: {e}")
-
-# Filtter for "ไม่ระบุจังหวัด"
-def filter_missing_province(df):
-     try:
-          return df[df["จังหวัด"] == "ไม่ระบุจังหวัด"]
-
-     except Exception as e:
-        print(f"เกิดข้อผิดพลาด: {e}")
-
-# Filter top province by number of patients
-def filter_top_row(df):
-     try:
-          # Get maximum row of "จำนวนผู้ป่วย"
-          df_max = df.loc[df["จำนวนผู้ป่วย"].idxmax()]
-          # Get minimum row of "จำนวนผู้ป่วย"
-          df_min = df.loc[df["จำนวนผู้ป่วย"].idxmin()]
-
-          return df_max, df_min
-     
-     except Exception as e:
-        print(f"เกิดข้อผิดพลาด: {e}")
+def format_metric(n):
+     if n > 1000000:
+          print("1 ckecked!...")
+          if (n % 1000000 == 0):
+               print("2 ckecked!...")
+               return f"{n // 1000000} ล้าน"
+          else:
+               # round to 2 decimal
+               print("3 ckecked!...")
+               var = round(n / 1000000, 2)
+               var_str = f"{var:.2f}"
+               
+               # If the second decimal digit = 0, drop it for cleaner display
+               if var_str[-1] == "0":
+                    print("4 ckecked!...")
+                    var_str = f"{var:.1f}"
+               
+               return f"{var_str} ล้าน"
+     else:
+          return f"{n:,}"
