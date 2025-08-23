@@ -16,6 +16,8 @@ components/kpi_cards_old.py
 components/choropleth.py
 components/data_table.py
 components/bar_chart.py
+components/heatmap.py
+components/donut_chart.py
 loaders/
 streamlit_app.py
 data/sample.csv
