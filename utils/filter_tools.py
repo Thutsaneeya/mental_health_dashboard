@@ -21,7 +21,7 @@ def select_by_year(df, year):
         print(f"เกิดข้อผิดพลาด: {e}")
         return df
         
-# Filter province 
+# Filter province by year select
 def filter_province(df):
      try:
           # Remove rows "ไม่ระบุจังหวัด" and "รวม" for chroropleth
@@ -47,13 +47,26 @@ def filter_province(df):
 
 
 
-# Reshape DataFrame
+# Reshape DataFrame none year select
 def reshape_disease_summary(df):
-     print("Reshape!...")
-     df = df[df["จังหวัด"] == "รวม"]
-     df_drop = df.drop(columns = ["จังหวัด", "รวม", "pro_code"])
-     
-     return df_drop.melt(id_vars = "ปี", var_name = "โรค", value_name = "จำนวนผู้ป่วย")
+     # Total "รวม" rows
+     df_totla_raw = df[df["จังหวัด"] == "รวม"]
+     df_total = df_totla_raw.drop(columns = ["จังหวัด", "รวม", "pro_code"])
+     df_sum = df_total.melt(id_vars = "ปี", var_name = "โรค", value_name = "จำนวนผู้ป่วย")
+
+     # With out "รวม" rows
+     df_detail = df[df["จังหวัด"] != "รวม"]
+     df = df_detail.drop(columns = ["รวม", "pro_code"])
+     df_max = df.melt(id_vars = ["ปี", "จังหวัด"], var_name = "โรค", value_name = "จำนวนผู้ป่วย")
+     df_hotspot = (
+                    df_max.groupby(["ปี", "โรค"])
+                   .apply(lambda g: g.loc[g["จำนวนผู้ป่วย"].idxmax()]
+     ).reset_index(drop = True))[["ปี", "โรค", "จังหวัด"]]
+
+     # Merge DataFrame for Heatmap
+     df_reshape = df_sum.merge(df_hotspot, on = ["ปี", "โรค"], how = "left")
+
+     return df_reshape
 
 
 # Sort DataFrame
