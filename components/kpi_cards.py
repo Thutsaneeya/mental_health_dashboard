@@ -10,18 +10,18 @@ from utils.filter_tools import format_metric
 # KPI card for total number of patients
 def overview_total_patients(df, year):
     # format_metric
-    return st.metric(label = f"{year}", value = f"{format_metric(df['รวม'].iloc[0])}")
+    return st.metric(label = "จำนวนผู้ป่วยทั้งหมด(คน)", value = f"{format_metric(df['รวม'].iloc[0])}")
 
 # KPI card for missing province
-def overview_missing_province(df):
-    return st.metric(label = "ไม่ระบุจังหวัด", value = f"{format_metric(df['รวม'].iloc[0])}")
+"""def overview_missing_province(df):
+    return st.metric(label = "ไม่ระบุจังหวัด", value = f"{format_metric(df['รวม'].iloc[0])}")"""
 
 # KPI for top province by number of patients
 def overview_top_patients(df):
     #  delta_color = "inverse"
-    return st.metric(label = df["จังหวัด"], value = f"{format_metric(df['รวม'])}")
+    return st.metric(label =f"🔴{df['จังหวัด']}", value = f"{format_metric(df['รวม'])} คน")
 
 # KPI for rare province by number of patients
 def overview_min_patients(df):
-    return st.metric(label = df["จังหวัด"], value = f"{format_metric(df['รวม'])}")
+    return st.metric(label = f"🟢{df['จังหวัด']}", value = f"{format_metric(df['รวม'])} คน")
 
