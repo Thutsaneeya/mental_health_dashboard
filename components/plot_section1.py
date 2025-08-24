@@ -1,42 +1,43 @@
-# plot_section1.py 
-# Calculate total cases per disease by year
+# plot_section1.py
+# Choropleth
+# Number of patients by province per year
 
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from utils.import_tools import st, px
-from utils.filter_tools import summarize_by_disease
+from utils.import_tools import px, st
 
-# Bar Chart: Calculate total cases per disease
-def plot_bar(df):
-
-    #df_summary = df.groupby("ประเภทโรค")["จำนวนผู้ป่วย"].sum().reset_index()
-    df_summary = summarize_by_disease(df)
-    
-    # plot bar chart
-    bar_fig = px.bar(
-                        df_summary, 
-                        x = "ประเภทโรค", 
-                        y = "จำนวนผู้ป่วย",  
-                        color = "ประเภทโรค", 
-                        barmode = "group",
-                        #title = "จำนวนผู้ป่วยทั้งหมดในแต่ละโรค",
-                        labels = {
-                                    "จำนวนผู้ป่วย": "จำนวนผู้ป่วย (ราย)",
-                                    "ประเภทโรค": "ประเภทโรค"
-
-                        },
-                        color_discrete_sequence = px.colors.qualitative.Set3
+def plot_choropleth(df, geojson):
+    # Create choropleth
+    fig = px.choropleth(
+                        df,
+                        geojson = geojson,
+                        locations = "pro_code",
+                        color = "รวม",
+                        featureidkey = "properties.pro_code",
+                        #hover_name = df["จังหวัด"],
+                        custom_data = ["จังหวัด", "รวม"],
+                        color_continuous_scale = "YlOrRd",
     )
-    bar_fig.update_traces(
-                            hovertemplate = '<b>%{x}<br>' +
-                                            '<b>จำนวนผู้ป่วย:</b> %{y:,.0f} ราย<br>' +
-                                            '<extra></extra>'
+    fig.update_geos(fitbounds = "locations", visible = False)
+    fig.update_traces(
+                        hovertemplate = '<b>%{customdata[0]}<br>' +
+                                        '<b>จำนวนผู้ป่วย:</b> %{customdata[1]:,} คน<br>' +
+                                        '<extra></extra>'
     )
-    bar_fig.update_layout(title = "จำนวนผู้ป่วยทั้งหมดในแต่ละโรค")
-    st.plotly_chart(bar_fig, use_container_width = True, key = "bar_section1")
+    fig.update_layout(
+                        template = 'plotly_dark',
+                        plot_bgcolor = 'rgba(0, 0, 0, 0)',
+                        paper_bgcolor = 'rgba(0, 0, 0, 0)',
+                        margin = dict(l = 0, r = 0, t = 0, b = 0),
+                        height = 450,
+                        coloraxis_colorbar = dict(
+                                                    title = "จำนวนผู้ป่วย (คน)",
+                                                    x = 0.9,       # horizontal (0 = left, 1 = right)
+                                                    y = 0.5,        # vertical (0 = bottom, 1 = top)
+                                                    len = 0.6,      # length of legend labels
+                                                    thickness = 15  
+                        )
 
-
-"""def show_section1(df, province):
-    return plot_scatter(df, province), plot_bar(df)"""
-
+    )
+    st.plotly_chart(fig, use_container_width = True, key = "choropleth")
