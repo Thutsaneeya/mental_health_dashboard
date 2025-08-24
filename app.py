@@ -1,66 +1,124 @@
 # app.py
+# Build dashboard
 
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from utils.import_tools import pd, st
-from data_preparation.load_data import get_data
-from utils.filter_tools import melte_data
+from utils.import_tools import st, alt
+from loaders.load_data_main import get_data, get_geojson
+from utils.filter_tools import select_by_year, filter_province, reshape_disease_summary, sorted_data, get_top_disease
 from components.dropdown import get_selections
-from components.kpi_cards import render_kpi_overview, render_kpi_by_province
-from utils.filter_tools import health_summary, select_by_province, select_by_disease
-from components.plot_section1 import plot_bar
-from components.plot_section2 import plot_scatter
-from components.plot_section3 import plot_section3
+from components.kpi_cards import overview_year, overview_total_patients, overview_top_patients, overview_min_patients # overview_missing_province
+from components.plot_section1  import plot_choropleth
+from components.plot_section2 import plot_heatmap
+from components.plot_section3 import data_table
 
-# Section1
-def show_section1(df_melted, total_case, top_disease_name, top_disease_sum, top_province):
-    # Overview kpi cards
-    render_kpi_overview(total_case, top_disease_name, top_disease_sum, top_province)
-    # Bar chart
-    plot_bar(df_melted)
+# Page configuration _______________________________________________________________________________________
+st.set_page_config(
+    page_title = "Mental Health dashboard",
+    page_icon = "🍃",
+    layout = "wide",
+    initial_sidebar_state = "expanded")
 
-# Section2
-def show_section2(df_by_province, sum_case, disease_name, disease_sum, rare_disease_name, rare_disease_count, province):
-    # Province kpi
-    render_kpi_by_province(sum_case, disease_name, disease_sum, rare_disease_name, rare_disease_count, province)
-    # Scatter chart
-    plot_scatter(df_by_province, province)
+alt.themes.enable("dark")
 
-# Section3
-def show_section3(df_by_disease, disease):
-    # Facet bar chart
-    plot_section3(df_by_disease, disease)
+# Define emoji for each disease ______________________________________________________________________________
+emoji_map = {
+                "โรคทางจิตเวชอื่นๆ": "🩺",
+                "โรควิตกกังวล": "😟",
+                "โรคจิตเภท": "🧠",
+                "ติดสารเสพติดอื่นๆ": "💊",
+                "ติดยาบ้า (Amphetamine)":"⚡",
+                "ติดแอลกอฮอล์": "🍺",
+                "โรคชึมเศร้า": "😔",
+                "โรคลมชัก": "💜"
+}
 
-def run_dashboard():
-    st.title("Mental Health Dashboard") 
-    # __________________________ Load and Prepare Data __________________________
-    df, df_copy = get_data()
-    df_melted = melte_data(df)
+# Load DataFrame ______________________________________________________________________________________________
+df = get_data()
+geojson = get_geojson()
 
-    # __________________________ Get Parameters _________________________________
+# Slide bar ___________________________________________________________________________________________________
+with st.sidebar:
+    st.markdown("<h3 style = 'white-space: nowrap;'>🍃รายงานสุขภาพจิตของคนไทย</h3>", unsafe_allow_html = True)
     # Get parameter from selectbox
-    province, disease = get_selections(df_melted)
+    year = get_selections(df)
 
-     # ________________________ Filter __________________________________________
-    df_by_province = select_by_province(df_melted, province)
-    df_by_disease = select_by_disease(df_melted, disease)
+# Filter ________________________________________________________________________________________________________
+df_reshape = reshape_disease_summary(df)
+df_year = select_by_year(df, year)
+df_top_disease = get_top_disease(df_reshape, year)
+df_main, df_total_row, df_m_province, df_patients, df_top_p, df_min_p = filter_province(df_year)
+df_sorted = sorted_data(df_patients)
 
-    # __________________________ Describe Data __________________________________
-    total_case, top_disease_name, top_disease_sum, top_province = health_summary(df_melted, False)
-    sum_case, disease_name, disease_sum, rare_disease_name, rare_disease_count = health_summary(df_by_province, True)
+# Dashboard panel ________________________________________________________________________________________________
 
-    # __________________________ Visualize _______________________________________
-    # Layout    
-    tab1, tab2, tab3 = st.tabs(["จำนวนผู้ป่วยทั้งหมด", "การกระจายตัวของผู้ป่วย", "แนวโน้มผู้ป่วยตามพื้นที่"])
-    with tab1:
-        show_section1(df_melted, total_case, top_disease_name, top_disease_sum, top_province)
-    with tab2:
-        show_section2(df_by_province, sum_case, disease_name, disease_sum, rare_disease_name, rare_disease_count, province)
-    with tab3:
-        show_section3(df_by_disease, disease)
-    #show_sections(df_filtered, province)
+# Create columns
+col = st.columns((1, 4.5, 1.5), gap = "medium")
 
-run_dashboard()
-#show_section1(df_filtered, province)
-#run_section2 = show_section2()
+# Layout
+with col[0]:
+    #st.markdown("##### จำนวนผู้ป่วย (คน)")
+    overview_year(year)
+    overview_total_patients(df_total_row)
+    st.write("")
+    #overview_missing_province(df_m_province)
+    st.markdown("###### มากสุด/ ต่ำสุด")
+    overview_top_patients(df_top_p)
+    overview_min_patients(df_min_p)
+    st.write("")
+    
+with col[1]:
+        plot_choropleth(df_main, geojson)
+        plot_heatmap(df_reshape)
+
+        with st.expander('🏛️แหล่งข้อมูล', expanded = True):
+            st.write('''- ข้อมูลจากคลังข้อมูลการแพทย์และสุขภาพ (HDC) กรมสุขภาพจิต กระทรวงสาธารณสุข (https://dmh.go.th/report/datacenter/hdc/)''')
+
+with col[2]:
+    st.markdown("###### 🚩จำนวนผู้ป่วยรายจังหวัด")
+    data_table(df_sorted)
+    with st.expander('Top 5 โรคยอดนิยม', expanded = True):
+        for i, row in df_top_disease.iterrows():
+            disease = row["โรค"]
+            emoji = emoji_map.get(disease)
+            st.write(f'''- {emoji}{row['โรค']}''')
+
+
+st.markdown("""
+<style>
+
+[data-testid="block-container"] {
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-top: 1rem;
+    padding-bottom: 0rem;
+    margin-bottom: -7rem;
+}
+
+[data-testid="stVerticalBlock"] {
+    padding-left: 0rem;
+    padding-right: 0rem;
+}
+
+[data-testid="stMetric"] {
+    background-color: #393939;
+    text-align: center;
+    padding: 15px 0;
+}
+
+[data-testid="stMetricLabel"] {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+</style>
+""", unsafe_allow_html = True)
+
+
+
+
+
+
