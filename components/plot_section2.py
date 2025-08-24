@@ -1,35 +1,34 @@
 # plot_section2.py
-# Analyze annual distribution of patients
+# Heatmap.py
+# Total number of patients by disease 
 
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from utils.import_tools import st, px
+from utils.import_tools import alt, st
 
-# Scatter chart:  Analyze annual distribution of patients
-def plot_scatter(df, province):
-    # Plot scatter chart
-    scatter_fig = px.scatter(
-                                df, 
-                                x = "ประเภทโรค", 
-                                y = "จำนวนผู้ป่วย", 
-                                size  = "จำนวนผู้ป่วย",
-                                color = "ประเภทโรค",
-                                #title = "จำนวนผู้ป่วยในปีงบประมาณ 2566",
-                                labels = {
-                                            "จังหวัด": "จังหวัด",
-                                            "จำนวนผู้ป่วย": "จำนวนผู้ป่วย (ราย)",
-                                            "ประเภทโรค": "ประเภทโรค"
+def plot_heatmap(df):
 
-                                },
-                                color_discrete_sequence = px.colors.qualitative.Set3,
-                                #custom_data = ["ประเภทโรค"]
-    )
-    scatter_fig.update_traces(
-                                    hovertemplate = '<b>%{x}<br>' +
-                                                    '<b>จำนวนผู้ป่วย:</b> %{y:,.0f} ราย<br>' +
-                                                    '<extra></extra>'
+    # Insert new columns for tooltip
+    df["ปี_โรค"] = df.apply(lambda row: f"{row['ปี']} - {row['โรค']}", axis = 1)
 
-        )
-    scatter_fig.update_layout(title = f"การกระจายตัวของผู้ป่วยแต่ละโรคในจังหวัด{province}")
-    st.plotly_chart(scatter_fig, use_container_width = True, key = "scatter_section2")
+    heatmap = alt.Chart(df).mark_rect().encode(
+                                                # Norminal(N): category data (โรค, จังหวัด)
+                                                # Ordinal(O): ordered categorical data (ปี)
+                                                # Quantitative(Q): can be measured, calculated, or scaled (จำนวนผู้ป่วย, อายุ)
+                                                # horizontal: labelAngle = 0, vertical: labelAngle = 90
+                                                x = alt.X("โรค:O", axis = alt.Axis(title = "", titleFontSize = 16, titlePadding = 15, titleFontWeight = 900)),
+                                                y = alt.Y("ปี:O", axis = alt.Axis(title = "ปี", titleFontSize = 18, titlePadding = 15)),  
+                                                color = alt.Color("จำนวนผู้ป่วย:Q", legend = None, scale = alt.Scale(scheme = "yelloworangebrown")),
+                                                tooltip = [
+                                                            alt.Tooltip("ปี_โรค:N", title = "ปี"),
+                                                            alt.Tooltip("จำนวนผู้ป่วย:Q", title = "จำนวนผู้ป่วย (คน)", format = ",d"),
+                                                            alt.Tooltip("จังหวัด:N", title = "พบมากที่สุด")
+                                                ],
+                                                # Color of the outline around each chart element
+                                                stroke = alt.value("black"),
+                                                # Sets the thickness of that outline in pixels
+                                                strokeWidth = alt.value(0.25),
+    ).properties(width = 900).configure_axis(labelFontSize = 12, titleFontSize = 12)
+    
+    st.altair_chart(heatmap, use_container_width = True, key = "heatmap")
