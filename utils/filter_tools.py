@@ -36,8 +36,9 @@ def filter_province(df):
           df_patients = df[["จังหวัด", "รวม"]]
           
           # Get maximum and minimum rows of patients for KPI cards
-          df_top_p = df_patients.loc[df_patients["รวม"].idxmax()]
-          df_min_p = df_patients.loc[df_patients["รวม"].idxmin()]
+          df_patients_all = df[df["จังหวัด"] != "รวม"][["จังหวัด", "รวม"]]
+          df_top_p = df_patients_all.loc[df_patients_all["รวม"].idxmax()]
+          df_min_p = df_patients_all.loc[df_patients_all["รวม"].idxmin()]
 
           return df_main, df_total_row, df_m_province, df_patients, df_top_p, df_min_p
 
@@ -69,36 +70,25 @@ def reshape_disease_summary(df):
           )[["ปี", "โรค", "จังหวัด"]]
 
           # Merge DataFrame for heatmap
-          df_reshape = df_sum.merge(df_hotspot, on = ["ปี", "โรค"], how = "left")
-
-          return df_reshape, df_detail_melted
+          return df_sum.merge(df_hotspot, on = ["ปี", "โรค"], how = "left")
 
      except Exception as e:
         print(f"เกิดข้อผิดพลาด: {e}")
         #return df
 
-# Filter top 3 disease by year
+# Filter top 5 disease by year
 def get_top_disease(df, year):
-          # Top 3 disease by year
+          # Filter by year
           df_disease_year = df[df["ปี"] == year]
-
-          df_top_disease = (
-                              df_disease_year.sort_values(["จำนวนผู้ป่วย"], ascending = False)
-                              # Get only the row with the highest patient count per disease
-                              .groupby("โรค").head(1)
-                              # Get top 3 diseases overall
-                              .sort_values("จำนวนผู้ป่วย", ascending = False).head(3)
-                              .reset_index(drop = True)
-          )
-
-          return df_top_disease.sort_values("จำนวนผู้ป่วย", ascending = False)
+          # Get top 5 
+          return df_disease_year.sort_values(by = "จำนวนผู้ป่วย", ascending = False).head(5)
 
 # Sort DataFrame
 def sorted_data(df):
      # Sort value
      df = df[["จังหวัด", "รวม"]]
      #df_sort = (df.groupby("จังหวัด", as_index = False)["จำนวนผู้ป่วย"].sort_values(by = "จำนวนผู้ป่วย", ascending = False)).reset_index()
-     df_sorted = df.sort_values(by = "รวม", ascending = False)
+     df_sorted = df.sort_values(by = "รวม", ascending = True)
      return df_sorted
 
 # Format for KPI cards

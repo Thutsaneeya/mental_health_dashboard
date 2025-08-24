@@ -11,17 +11,6 @@ build/
 # Jupyter Notebook (ไม่ต้องการให้ push ขึ้น)
 *.ipynb
 .ipynb_checkpoints/
-components/plot_section2_old.py
-components/kpi_cards_old.py
-components/choropleth.py
-components/data_table.py
-components/bar_chart.py
-components/heatmap.py
-components/donut_chart.py
-loaders/
-streamlit_app.py
-data/sample.csv
-utils/filter_tools_old.py
 
 # VS Code settings
 .vscode/
