@@ -1,4 +1,5 @@
 # 🍃 Mental Health Dashboard (Thailand)
+🔗 [Live Demo]()
 
 ## Project Overview
 - Provincial-level mental health data from Thailand
@@ -21,7 +22,8 @@
 
 ## Tools & Technologies
 - Python, Pandas
-- Plotly, Altair, and Streamlit  
+- Plotly, Altair, and Streamlit 
+- jupyter notebook
 - GeoJSON for spatial mapping  
 
 ## How to Use
@@ -29,6 +31,3 @@
 2. Run `streamlit run app.py`  
 3. Select year and explore provincial insights
 
-## Author
-Thutsaneeya – passionate about data visualization, dashboard design, and public health analytics  
-📍 Based in Udon Thani, Thailand  
