@@ -21,11 +21,11 @@
 - ✅ Focused on clean presentation and interactive storytelling
 
 ## Tools & Technologies
-- Python, Pandas
-- Plotly, Altair, and Streamlit 
-- jupyter notebook
-- GeoJSON for spatial mapping  
-
+- 🐍 Python, 🐼 Pandas  
+- 📈 Plotly, 📊 Altair, and 🌐 Streamlit  
+- 📓 Jupyter Notebook for basic data preparation
+- 🗺️ GeoJSON for spatial mapping and choropleth visualizations
+ 
 ## How to Use
 1. Clone the repository  
 2. Run `streamlit run app.py`  
