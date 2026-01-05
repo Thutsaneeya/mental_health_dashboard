@@ -9,7 +9,7 @@ build/
 *.log
 
 # Jupyter Notebook (ไม่ต้องการให้ push ขึ้น)
-*.ipynb
+test.ipynb
 .ipynb_checkpoints/
 
 # VS Code settings
