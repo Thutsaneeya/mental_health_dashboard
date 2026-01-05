@@ -1,5 +1,5 @@
 # 🍃 Mental Health Dashboard (Thailand)
-🔗 [Live Demo]()
+🔗 [Live Demo]() 📓[Notebook](https://github.com/Thutsaneeya/mental_health_dashboard/blob/main/notebook/mental_health.ipynb)
 
 ## Project Overview
 - Provincial-level mental health data from Thailand
