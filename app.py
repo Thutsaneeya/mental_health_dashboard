@@ -15,7 +15,7 @@ from components.plot_section3 import data_table
 
 # Page configuration _______________________________________________________________________________________
 st.set_page_config(
-    page_title = "Mental Health dashboard",
+    page_title = "Thailand Mental Health",
     page_icon = "🍃",
     layout = "wide",
     initial_sidebar_state = "expanded")
@@ -40,7 +40,7 @@ geojson = get_geojson()
 
 # Slide bar ___________________________________________________________________________________________________
 with st.sidebar:
-    st.markdown("<h3 style = 'white-space: nowrap;'>🍃รายงานสุขภาพจิตของคนไทย</h3>", unsafe_allow_html = True)
+    st.markdown("<h3 style = 'white-space: nowrap;'>🍃 Thailand Mental Health</h3>", unsafe_allow_html = True)
     # Get parameter from selectbox
     year = get_selections(df)
 
