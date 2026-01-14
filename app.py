@@ -16,7 +16,7 @@ from components.plot_section3 import data_table
 # Page configuration _______________________________________________________________________________________
 st.set_page_config(
     page_title = "Thailand Mental Health",
-    page_icon = "🍃",
+    #page_icon = "🍃",
     layout = "wide",
     initial_sidebar_state = "expanded")
 
