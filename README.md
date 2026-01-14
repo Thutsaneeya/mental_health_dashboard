@@ -1,5 +1,8 @@
 # 🍃 Mental Health Dashboard (Thailand)
-[![Streamlit Logo](https://streamlit.io/images/brand/streamlit-logo-secondary-colormark-darktext.png) Live Demo](https://thai-mental-health-dashboard.streamlit.app/)
+<a href="https://thai-mental-health-dashboard.streamlit.app/">
+  <img src="https://streamlit.io/images/brand/streamlit-logo-secondary-colormark-darktext.png" alt="Streamlit Logo" width="150"/>
+</a>
+
 📓[Notebook](https://github.com/Thutsaneeya/mental_health_dashboard/blob/main/notebook/mental_health.ipynb)
 
 ## Project Overview
