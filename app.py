@@ -40,7 +40,7 @@ geojson = get_geojson()
 
 # Slide bar ___________________________________________________________________________________________________
 with st.sidebar:
-    st.markdown("<h3 style = 'white-space: nowrap;'>🍃 Thailand Mental Health</h3>", unsafe_allow_html = True)
+    st.markdown("<h3 style = 'white-space: nowrap;'>Thailand Mental Health</h3>", unsafe_allow_html = True)
     # Get parameter from selectbox
     year = get_selections(df)
 
