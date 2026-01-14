@@ -19,7 +19,7 @@ def data_table(df):
                     df,
                     column_order = ("จังหวัด", "จำนวนผู้ป่วย (คน)"),
                     hide_index = True,
-                    width = None,
+                    use_container_width = True, #width = None,
                     column_config = {
                                        "จังหวัด": st.column_config.TextColumn(
                                            "จังหวัด",
