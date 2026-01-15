@@ -21,10 +21,10 @@
 - ✅ Focused on clean presentation and interactive storytelling
 
 ## Tools & Technologies
-- 🐍 Python, 🐼 Pandas  
-- 📈 Plotly, 📊 Altair, and 🌐 Streamlit  
-- 📓 Jupyter Notebook for basic data preparation
-- 🗺️ GeoJSON for spatial mapping and choropleth visualizations
+- `Python`, `Pandas`  
+- `Plotly`, `Altair`, and `Streamlit`  
+- `Jupyter Notebook` for basic data preparation
+- 🗺️ `GeoJSON` for spatial mapping and choropleth visualizations
  
 ## How to Use
 1. Clone the repository  
