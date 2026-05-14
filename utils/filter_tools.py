@@ -75,8 +75,9 @@ def reshape_disease_summary(df):
           return df_sum.merge(df_hotspot, on = ["ปี", "โรค"], how = "left")
 
      except Exception as e:
-        print(f"เกิดข้อผิดพลาด: {e}")
-        #return df
+          st.error(f"reshape error: {e}")
+          raise
+          #return df
 
 # Filter top 5 disease by year
 def get_top_disease(df, year):
