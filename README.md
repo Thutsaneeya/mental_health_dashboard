@@ -1,6 +1,6 @@
 # 🍃 Mental Health Dashboard (Thailand)
-🔗 [streamlit](https://thai-mental-health-dashboard.streamlit.app/) 📓[Notebook](https://github.com/Thutsaneeya/mental_health_dashboard/blob/main/notebook/mental_health.ipynb)
-
+🔗 [DEMO](https://thai-mental-health-dashboard.streamlit.app/) 📓[Notebook](https://github.com/Thutsaneeya/mental_health_dashboard/blob/main/notebook/mental_health.ipynb)
+![Dashboard Preview](assets/dashboard.png)
 ## Project Overview
 - Provincial-level mental health data from Thailand
 - Focus on year-over-year trends and regional disparities
