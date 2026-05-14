@@ -62,15 +62,13 @@ def reshape_disease_summary(df):
           # With out "รวม" rows
           df_detail_raw = df[df["จังหวัด"] != "รวม"]
           # Drop columns
-          df_detail = df_detail_raw.drop(columns = ["รวม", "pro_code"])
+          df_detail = df_detail_raw.drop(columns = ["รวม", "pro_code"], errors="ignore")
           # Melte DataFrame
           df_detail_melted = df_detail.melt(id_vars = ["ปี", "จังหวัด"], var_name = "โรค", value_name = "จำนวนผู้ป่วย")
           # Get maximum number of patients by disease
-          df_hotspot = (
-                         df_detail_melted.groupby(["ปี", "โรค"])
-                         .apply(lambda g: g.loc[g["จำนวนผู้ป่วย"].idxmax()]).reset_index(drop = True)
-          )[["ปี", "โรค", "จังหวัด"]]
-
+          #df_hotspot = (df_detail_melted.groupby(["ปี", "โรค"]).apply(lambda g: g.loc[g["จำนวนผู้ป่วย"].idxmax()]).reset_index(drop = True))[["ปี", "โรค", "จังหวัด"]]
+          idx = df_detail_melted.groupby(["ปี", "โรค"])["จำนวนผู้ป่วย"].idxmax()
+          df_hotspot = df_detail_melted.loc[idx, ["ปี", "โรค", "จังหวัด"]]
           # Merge DataFrame for heatmap
           return df_sum.merge(df_hotspot, on = ["ปี", "โรค"], how = "left")
 
