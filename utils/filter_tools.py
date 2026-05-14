@@ -4,6 +4,7 @@
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from utils.import_tools import st, pd
 
 # Filter DataFrame by year
 def select_by_year(df, year):
@@ -78,11 +79,17 @@ def reshape_disease_summary(df):
 
 # Filter top 5 disease by year
 def get_top_disease(df, year):
-          # Filter by year
-          #df_disease_year = df[df["ปี"] == year]
-          df_disease_year = df[df["ปี"].astype(str) == str(year)]
-          # Get top 5 
-          return df_disease_year.sort_values(by = "จำนวนผู้ป่วย", ascending = False).head(5)
+     if df is None:
+        st.error("df is None")
+        return pd.DataFrame()
+
+     if "ปี" not in df.columns:
+        st.error(f"columns: {df.columns.tolist()}")
+        return pd.DataFrame()
+     # Filter by year
+     df_disease_year = df[df["ปี"] == year]
+     #Get top 5 
+     return df_disease_year.sort_values(by = "จำนวนผู้ป่วย", ascending = False).head(5)
 
 # Sort DataFrame
 def sorted_data(df):
