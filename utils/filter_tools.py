@@ -52,9 +52,10 @@ def reshape_disease_summary(df):
      try:
           # Filter for heatmap
           # Total "รวม" rows
-          df_totla_raw = df[df["จังหวัด"] == "รวม"]
+          df_total_raw = df[df["จังหวัด"] == "รวม"]
           # Drop columns
-          df_total = df_totla_raw.drop(columns = ["จังหวัด", "รวม", "pro_code"])
+          #df_total = df_totla_raw.drop(columns = ["จังหวัด", "รวม", "pro_code"])
+          df_total = df_total_raw.drop(columns = ["จังหวัด", "รวม", "pro_code"], errors="ignore")
           # Melte DataFrame
           df_sum = df_total.melt(id_vars = "ปี", var_name = "โรค", value_name = "จำนวนผู้ป่วย")
 
@@ -75,7 +76,7 @@ def reshape_disease_summary(df):
 
      except Exception as e:
         print(f"เกิดข้อผิดพลาด: {e}")
-        #return df
+        return df
 
 # Filter top 5 disease by year
 def get_top_disease(df, year):
