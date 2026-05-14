@@ -79,7 +79,8 @@ def reshape_disease_summary(df):
 # Filter top 5 disease by year
 def get_top_disease(df, year):
           # Filter by year
-          df_disease_year = df[df["ปี"] == year]
+          #df_disease_year = df[df["ปี"] == year]
+          df_disease_year = df[df["ปี"].astype(str) == str(year)]
           # Get top 5 
           return df_disease_year.sort_values(by = "จำนวนผู้ป่วย", ascending = False).head(5)
 
